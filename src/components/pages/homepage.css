@@ -1,0 +1,17 @@
+.pagination {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .pagination__link {
+    cursor: pointer;
+  }
+  
+  .pagination__link--active {
+    color: blue
+  }
+  
+  .pagination__link--disabled {
+    color: grey
+  }
