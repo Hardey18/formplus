@@ -1,9 +1,17 @@
 import React from 'react';
+import './card.css'
 
-function Card({ name }) {
+function Card({ name, height }) {
   return (
-    <div>
-        <h2>{name}</h2>
+    <div className="item">
+        <div className="top-container">
+            <div className="name">{name}</div>
+            <div className="content">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur dolorem repellendus modi possimus, eos
+            </div>
+            <div>{height}</div>
+        </div>
+        <div className="bottom">Use template</div>
     </div>
     );
 }

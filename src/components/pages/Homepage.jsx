@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 import ReactPaginate from 'react-paginate';
 import { retrieveTemplate } from '../../slices/template'
 import './homepage.css'
@@ -8,6 +7,8 @@ import Card from '../Card';
 
 function Homepage() {
     const [currentPage, setCurrentPage] = useState(0);
+    const [search, setNewSearch] = useState("");
+    const [mass, setMass] = useState("");
 
   const templates = useSelector(state => state.templates);
   const dispatch = useDispatch();
@@ -22,23 +23,56 @@ function Homepage() {
   const PER_PAGE = 5;
   const offset = currentPage * PER_PAGE;
 
-  const currentPageData = templates
-    .slice(offset, offset + PER_PAGE)
-    .map(({ name }) => (<>
-        {/* <p>{name}</p> */}
-        <Card 
-          name={name}
-        />
-    </>));
+  // const filtered = !search
+  //   ? templates
+  //   : templates.filter((result) =>
+  //       result.name.toLowerCase().includes(search.toLowerCase())
+  //     );
 
-    const pageCount = Math.ceil(templates.length / PER_PAGE);
+  const filtered = search ? templates.filter((result) =>
+        result.name.toLowerCase().includes(search.toLowerCase())
+       ) : mass ? templates.filter((result) =>
+       result.mass.toLowerCase().includes(mass.toLowerCase())
+      ) : templates;
+  
+
+  const currentPageData = filtered
+    .slice(offset, offset + PER_PAGE)
+    .map(({ name, height }) => (
+        <Card
+          name={name}
+          height={height}
+        />
+    ));
+
+    
+
+    const pageCount = Math.ceil(filtered.length / PER_PAGE);
 
     function handlePageClick({ selected: selectedPage }) {
       setCurrentPage(selectedPage);
     }
+
+    const handleSearchChange = (e) => {
+      setNewSearch(e.target.value);
+    };
+    const handleMassChange = (e) => {
+      setMass(e.target.value);
+    };
   return (<>
-    <h1>Hello</h1>
+    <div>
+      <input className="search" placeholder="Search Templates" type="text" value={search} onChange={handleSearchChange} />
+      <select onChange={handleMassChange}>
+          <option value="">All</option>
+          <option value="77">77</option>
+          <option value="75">75</option>
+          <option value="32">32</option>
+      </select>
+    </div>
+    <p className="category">{mass ? mass : "All"} Templates</p>
+    <div className="container">
       {currentPageData}
+    </div>
       <ReactPaginate
         previousLabel={"< Previous"}
         nextLabel={"Next >"}
