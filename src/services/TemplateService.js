@@ -1,9 +1,9 @@
-import http from '../http-common'
+import http from "../http-common";
 
 const getAll = () => {
-    return http.get("/people");
-  };
+  return http.get("/people");
+};
 
-const TemplateService = { getAll }
+const TemplateService = { getAll };
 
 export default TemplateService;

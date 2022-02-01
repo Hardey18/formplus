@@ -1,5 +1,5 @@
 import React from "react";
-import './App.css'
+import "./App.css";
 import Homepage from "./components/pages/Homepage";
 
 function App() {
@@ -7,7 +7,7 @@ function App() {
     <div className="App">
       <Homepage />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

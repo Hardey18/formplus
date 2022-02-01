@@ -9,11 +9,11 @@
   }
   
   .pagination__link--active {
-    /* color: blue;
-    padding: 1rem;
+    color: blue;
+    padding: .5rem;
     border: 1px solid blue;
     border-radius: 2px;
-    cursor: pointer; */
+    cursor: pointer;
   }
   
   .pagination__link--disabled {
