@@ -25,12 +25,6 @@ function Homepage() {
   const PER_PAGE = 15;
   const offset = currentPage * PER_PAGE;
 
-  // const filtered = !search
-  //   ? templates
-  //   : templates.filter((result) =>
-  //       result.name.toLowerCase().includes(search.toLowerCase())
-  //     );
-
   const filtered = search
     ? templates.filter((result) =>
         result.name.toLowerCase().includes(search.toLowerCase())
@@ -64,6 +58,11 @@ function Homepage() {
   const pageCount = Math.ceil(filtered.length / PER_PAGE);
 
   function handlePageClick({ selected: selectedPage }) {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
     setCurrentPage(selectedPage);
   }
 
@@ -96,23 +95,29 @@ function Homepage() {
 
         <div className="filterInput">
           <div>Sort By:</div>
-          <select onChange={handleMassChange}>
-            <option value="">All</option>
-            <option value="Health">Health</option>
-            <option value="Education">Education</option>
-            <option value="E-Commerce">E-Commerce</option>
-            <option value="Government">Government</option>
-          </select>
-          <select onChange={handleSort}>
-            <option value="">Default</option>
-            <option value="asc">Ascending</option>
-            <option value="des">Descending</option>
-          </select>
-          <select onChange={handleDateSort}>
-            <option value="">Default</option>
-            <option value="asc">Ascending</option>
-            <option value="des">Descending</option>
-          </select>
+          <div>
+            <select onChange={handleMassChange}>
+              <option value="">All</option>
+              <option value="Health">Health</option>
+              <option value="Education">Education</option>
+              <option value="E-Commerce">E-Commerce</option>
+              <option value="Government">Government</option>
+            </select>
+          </div>
+          <div>
+            <select onChange={handleSort}>
+              <option value="">Default</option>
+              <option value="asc">Ascending</option>
+              <option value="des">Descending</option>
+            </select>
+          </div>
+          <div>
+            <select onChange={handleDateSort}>
+              <option value="">Default</option>
+              <option value="asc">Ascending</option>
+              <option value="des">Descending</option>
+            </select>
+          </div>
         </div>
       </div>
       <p className="category">{mass || "All"} Templates</p>
