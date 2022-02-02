@@ -9,6 +9,8 @@ function Homepage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [search, setNewSearch] = useState("");
   const [mass, setMass] = useState("");
+  const [sortType, setSorted] = useState("");
+  const [dateSort, setDateSort] = useState("");
 
   const templates = useSelector((state) => state.templates);
   const dispatch = useDispatch();
@@ -20,7 +22,7 @@ function Homepage() {
   useEffect(() => {
     initFetch();
   }, [initFetch]);
-  const PER_PAGE = 5;
+  const PER_PAGE = 15;
   const offset = currentPage * PER_PAGE;
 
   // const filtered = !search
@@ -35,15 +37,27 @@ function Homepage() {
       )
     : mass
     ? templates.filter((result) =>
-        result.mass.toLowerCase().includes(mass.toLowerCase())
+        result.category[0].toLowerCase().includes(mass.toLowerCase())
       )
+    : sortType
+    ? [...templates].sort((a, b) => {
+        const isReversed = sortType === "asc" ? 1 : -1;
+        return isReversed * a.name.localeCompare(b.name);
+      })
+    : dateSort
+    ? [...templates].sort((a, b) => {
+        const isReversed = dateSort === "asc" ? 1 : -1;
+        const firstDate = a.created;
+        const secondDate = b.created;
+        return isReversed * firstDate.localeCompare(secondDate);
+      })
     : templates;
 
   const currentPageData = filtered
     .slice(offset, offset + PER_PAGE)
-    .map(({ name, height }, index) => (
+    .map(({ name, description }, index) => (
       <div key={index}>
-        <Card name={name} height={height} />
+        <Card name={name} description={description} />
       </div>
     ));
 
@@ -56,12 +70,22 @@ function Homepage() {
   const handleSearchChange = (e) => {
     setNewSearch(e.target.value);
   };
+
   const handleMassChange = (e) => {
     setMass(e.target.value);
   };
+
+  const handleSort = (e) => {
+    setSorted(e.target.value);
+  };
+
+  const handleDateSort = (e) => {
+    setDateSort(e.target.value);
+  };
+  console.log("results", templates);
   return (
     <>
-      <div>
+      <div className="inputContainers">
         <input
           className="search"
           placeholder="Search Templates"
@@ -69,12 +93,27 @@ function Homepage() {
           value={search}
           onChange={handleSearchChange}
         />
-        <select onChange={handleMassChange}>
-          <option value="">All</option>
-          <option value="77">77</option>
-          <option value="75">75</option>
-          <option value="32">32</option>
-        </select>
+
+        <div className="filterInput">
+          <div>Sort By:</div>
+          <select onChange={handleMassChange}>
+            <option value="">All</option>
+            <option value="Health">Health</option>
+            <option value="Education">Education</option>
+            <option value="E-Commerce">E-Commerce</option>
+            <option value="Government">Government</option>
+          </select>
+          <select onChange={handleSort}>
+            <option value="">Default</option>
+            <option value="asc">Ascending</option>
+            <option value="des">Descending</option>
+          </select>
+          <select onChange={handleDateSort}>
+            <option value="">Default</option>
+            <option value="asc">Ascending</option>
+            <option value="des">Descending</option>
+          </select>
+        </div>
       </div>
       <p className="category">{mass || "All"} Templates</p>
       <div className="container">{currentPageData}</div>

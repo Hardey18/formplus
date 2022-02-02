@@ -42,5 +42,5 @@
       "pre-commit": "lint-staged && pretty-quick --staged"
     }
   },
-  "proxy": "https://swapi.dev/api/"
+  "proxy": "https://front-end-task-dot-result-analytics-dot-fpls-dev.uc.r.appspot.com/"
 }

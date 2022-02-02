@@ -13,7 +13,7 @@ const templateSlice = createSlice({
   initialState,
   extraReducers: {
     [retrieveTemplate.fulfilled]: (state, action) => {
-      return [...action.payload.results];
+      return [...action.payload];
     },
   },
 });
