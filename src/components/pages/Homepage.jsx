@@ -22,6 +22,7 @@ function Homepage() {
   useEffect(() => {
     initFetch();
   }, [initFetch]);
+
   const PER_PAGE = 15;
   const offset = currentPage * PER_PAGE;
 
