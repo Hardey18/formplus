@@ -1,19 +1,34 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import ReactPaginate from "react-paginate";
 
 import { retrieveTemplate } from "../../slices/template";
 import "./homepage.css";
 import Card from "../Card";
 
-function Homepage() {
-  const [currentPage, setCurrentPage] = useState(0);
+const renderData = (data) => {
+  return (
+    <>
+      {data.map(({ name, description }, index) => (
+        <div key={index}>
+          <Card name={name} description={description} />
+        </div>
+      ))}
+    </>
+  );
+};
+
+function HomePage() {
   const [search, setNewSearch] = useState("");
   const [categorySortType, setCategorySortType] = useState("");
   const [alphabeticSortType, setAlphabeticSortType] = useState("");
   const [dateSortType, setDateSortType] = useState("");
+  const [currentPage, setcurrentPage] = useState(1);
+  const [maxPageNumberLimit, setmaxPageNumberLimit] = useState(15);
+  const [minPageNumberLimit, setminPageNumberLimit] = useState(0);
 
-  const templates = useSelector((state) => state.templates);
+  const itemsPerPage = 15;
+  const pageNumberLimit = 15;
+  const data = useSelector((state) => state.templates);
   const dispatch = useDispatch();
 
   const initFetch = useCallback(() => {
@@ -24,68 +39,70 @@ function Homepage() {
     initFetch();
   }, [initFetch]);
 
-  const PER_PAGE = 15;
-  const offset = currentPage * PER_PAGE;
-
   const filtered = search
-    ? templates.filter((result) =>
+    ? data.filter((result) =>
         result.name.toLowerCase().includes(search.toLowerCase())
       )
     : categorySortType
-    ? templates.filter((result) =>
+    ? data.filter((result) =>
         result.category[0]
           .toLowerCase()
           .includes(categorySortType.toLowerCase())
       )
     : alphabeticSortType
-    ? [...templates].sort((a, b) => {
+    ? [...data].sort((a, b) => {
         const isReversed = alphabeticSortType === "asc" ? 1 : -1;
         return isReversed * a.name.localeCompare(b.name);
       })
     : dateSortType
-    ? [...templates].sort((a, b) => {
+    ? [...data].sort((a, b) => {
         const isReversed = dateSortType === "asc" ? 1 : -1;
         const firstDate = a.created;
         const secondDate = b.created;
         return isReversed * firstDate.localeCompare(secondDate);
       })
-    : templates;
+    : data;
 
-  const currentPageData = filtered
-    .slice(offset, offset + PER_PAGE)
-    .map(({ name, description }, index) => (
-      <div key={index}>
-        <Card name={name} description={description} />
-      </div>
-    ));
+  const pages = [];
 
-  const pageCount = Math.ceil(filtered.length / PER_PAGE);
-
-  function handlePageClick({ selected: selectedPage }) {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
-    setCurrentPage(selectedPage);
+  for (let i = 1; i <= Math.ceil(filtered.length / itemsPerPage); i++) {
+    pages.push(i);
   }
+  const totalPage = Math.floor(filtered.length / itemsPerPage + 1);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filtered.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handleNextbtn = () => {
+    setcurrentPage(currentPage + 1);
+    if (currentPage + 1 > maxPageNumberLimit) {
+      setmaxPageNumberLimit(maxPageNumberLimit + pageNumberLimit);
+      setminPageNumberLimit(minPageNumberLimit + pageNumberLimit);
+    }
+  };
+  const handlePrevbtn = () => {
+    setcurrentPage(currentPage - 1);
+    if ((currentPage - 1) % pageNumberLimit === 0) {
+      setmaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
+      setminPageNumberLimit(minPageNumberLimit - pageNumberLimit);
+    }
+  };
 
   const handleSearchChange = (e) => {
     setNewSearch(e.target.value);
   };
-
-  const handleMassChange = (e) => {
+  const handleCategoryChange = (e) => {
     setCategorySortType(e.target.value);
   };
 
-  const handleSort = (e) => {
+  const handleSortChange = (e) => {
     setAlphabeticSortType(e.target.value);
   };
 
-  const handleDateSort = (e) => {
+  const handleDateSortChange = (e) => {
     setDateSortType(e.target.value);
   };
-  console.log("Length of Data", pageCount);
+
   return (
     <>
       <div className="inputContainers">
@@ -100,7 +117,7 @@ function Homepage() {
         <div className="filterInput">
           <div>Sort By:</div>
           <div>
-            <select onChange={handleMassChange}>
+            <select onChange={handleCategoryChange}>
               <option value="">All</option>
               <option value="Health">Health</option>
               <option value="Education">Education</option>
@@ -109,14 +126,14 @@ function Homepage() {
             </select>
           </div>
           <div>
-            <select onChange={handleSort}>
+            <select onChange={handleSortChange}>
               <option value="">Default</option>
               <option value="asc">Ascending</option>
               <option value="des">Descending</option>
             </select>
           </div>
           <div>
-            <select onChange={handleDateSort}>
+            <select onChange={handleDateSortChange}>
               <option value="">Default</option>
               <option value="asc">Ascending</option>
               <option value="des">Descending</option>
@@ -125,20 +142,24 @@ function Homepage() {
         </div>
       </div>
       <p className="category">{categorySortType || "All"} Templates</p>
-      <div className="container">{currentPageData}</div>
-      <ReactPaginate
-        previousLabel={"< Previous"}
-        nextLabel={"Next >"}
-        pageCount={pageCount}
-        onPageChange={handlePageClick}
-        containerClassName={"pagination"}
-        previousLinkClassName={"pagination__link"}
-        nextLinkClassName={"pagination__link"}
-        disabledClassName={"pagination__link--disabled"}
-        activeClassName={"pagination__link--active"}
-      />
+      <div className="container">{renderData(currentItems)}</div>
+
+      <div className="pageNumbers">
+        <button onClick={handlePrevbtn} disabled={currentPage === pages[0]}>
+          Previous
+        </button>
+        <div>
+          <span className="currentPage">{currentPage}</span> of{" "}
+          <span className="totalPage">{totalPage}</span>
+        </div>
+        <button
+          onClick={handleNextbtn}
+          disabled={currentPage === pages[pages.length - 1]}
+        >
+          Next
+        </button>
+      </div>
     </>
   );
 }
-
-export default Homepage;
+export default HomePage;

@@ -29,27 +29,6 @@ select {
   background: transparent;
 }
 
-.pagination {
-  list-style-type: none;
-  display: flex;
-  justify-content: space-between;
-  padding: 0;
-  margin: 4rem;
-}
-  
-.pagination__link {
-  cursor: pointer;
-}
-
-.pagination__link--active {
-  color: blue;
-  cursor: pointer;
-}
-
-.pagination__link--disabled {
-  color: grey
-}
-
 .search {
   box-sizing: border-box;
   padding: .6rem 1.8rem;
@@ -71,6 +50,30 @@ select {
   padding: 10px;
   margin-bottom: 2rem;
   padding: 0.5rem 4rem;
+}
+
+.pageNumbers {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4rem 10rem;
+}
+
+button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.currentPage {
+  border: 1px solid black;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin-right: 1rem;
+}
+
+.totalPage {
+  margin-left: 1rem;
 }
 
 @media (max-width: 992px) {
@@ -109,7 +112,7 @@ select {
     margin: 1rem 0;
   }
 
-  .pagination {
-    margin: 1rem;
+  .pageNumbers {
+    padding: 1rem 2rem;
   }
 }   

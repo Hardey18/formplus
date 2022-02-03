@@ -34,3 +34,16 @@
       font-size: 0.8rem;
       padding: 1rem 1.4rem;
   }
+
+  @media (max-width: 992px) {
+    .container {  
+      grid-template-columns: auto;
+      -ms-grid-columns: auto;
+    }
+  }   
+  @media (max-width: 800px) {
+    .container {
+      padding: 0.5rem 1rem;
+      grid-gap: 2rem;
+    }
+  }  
