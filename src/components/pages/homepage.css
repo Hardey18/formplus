@@ -34,7 +34,7 @@ select {
   display: flex;
   justify-content: space-between;
   padding: 0;
-  margin: 0 4rem;
+  margin: 4rem;
 }
   
 .pagination__link {
@@ -43,9 +43,6 @@ select {
 
 .pagination__link--active {
   color: blue;
-  /* padding: .5rem;
-  border: 1px solid blue;
-  border-radius: 2px; */
   cursor: pointer;
 }
 
@@ -113,6 +110,6 @@ select {
   }
 
   .pagination {
-    margin: 0 1rem;
+    margin: 1rem;
   }
 }   

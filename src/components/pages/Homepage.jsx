@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ReactPaginate from "react-paginate";
+
 import { retrieveTemplate } from "../../slices/template";
 import "./homepage.css";
 import Card from "../Card";
@@ -8,9 +9,9 @@ import Card from "../Card";
 function Homepage() {
   const [currentPage, setCurrentPage] = useState(0);
   const [search, setNewSearch] = useState("");
-  const [mass, setMass] = useState("");
-  const [sortType, setSorted] = useState("");
-  const [dateSort, setDateSort] = useState("");
+  const [categorySortType, setCategorySortType] = useState("");
+  const [alphabeticSortType, setAlphabeticSortType] = useState("");
+  const [dateSortType, setDateSortType] = useState("");
 
   const templates = useSelector((state) => state.templates);
   const dispatch = useDispatch();
@@ -30,18 +31,20 @@ function Homepage() {
     ? templates.filter((result) =>
         result.name.toLowerCase().includes(search.toLowerCase())
       )
-    : mass
+    : categorySortType
     ? templates.filter((result) =>
-        result.category[0].toLowerCase().includes(mass.toLowerCase())
+        result.category[0]
+          .toLowerCase()
+          .includes(categorySortType.toLowerCase())
       )
-    : sortType
+    : alphabeticSortType
     ? [...templates].sort((a, b) => {
-        const isReversed = sortType === "asc" ? 1 : -1;
+        const isReversed = alphabeticSortType === "asc" ? 1 : -1;
         return isReversed * a.name.localeCompare(b.name);
       })
-    : dateSort
+    : dateSortType
     ? [...templates].sort((a, b) => {
-        const isReversed = dateSort === "asc" ? 1 : -1;
+        const isReversed = dateSortType === "asc" ? 1 : -1;
         const firstDate = a.created;
         const secondDate = b.created;
         return isReversed * firstDate.localeCompare(secondDate);
@@ -72,17 +75,17 @@ function Homepage() {
   };
 
   const handleMassChange = (e) => {
-    setMass(e.target.value);
+    setCategorySortType(e.target.value);
   };
 
   const handleSort = (e) => {
-    setSorted(e.target.value);
+    setAlphabeticSortType(e.target.value);
   };
 
   const handleDateSort = (e) => {
-    setDateSort(e.target.value);
+    setDateSortType(e.target.value);
   };
-  console.log("results", templates);
+  console.log("Length of Data", pageCount);
   return (
     <>
       <div className="inputContainers">
@@ -121,7 +124,7 @@ function Homepage() {
           </div>
         </div>
       </div>
-      <p className="category">{mass || "All"} Templates</p>
+      <p className="category">{categorySortType || "All"} Templates</p>
       <div className="container">{currentPageData}</div>
       <ReactPaginate
         previousLabel={"< Previous"}
