@@ -1,6 +1,6 @@
 import React from "react";
 
-import "./card.css";
+import "./style.css";
 
 function Card({ name, description }) {
   return (

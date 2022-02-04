@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { retrieveTemplate } from "../../slices/template";
-import "./homepage.css";
-import Card from "../Card";
+import { retrieveTemplate } from "../../../slices/template";
+import "./style.css";
+import Card from "../../sections/Card";
+import Pagination from "../../sections/Pagination";
+import Sorting from "../../sections/Sorting";
+import InputSearch from "../../sections/InputSearch";
 
 const renderData = (data) => {
   return (
@@ -51,12 +54,12 @@ function HomePage() {
       )
     : alphabeticSortType
     ? [...data].sort((a, b) => {
-        const isReversed = alphabeticSortType === "asc" ? 1 : -1;
+        const isReversed = alphabeticSortType === "Ascending" ? 1 : -1;
         return isReversed * a.name.localeCompare(b.name);
       })
     : dateSortType
     ? [...data].sort((a, b) => {
-        const isReversed = dateSortType === "asc" ? 1 : -1;
+        const isReversed = dateSortType === "Ascending" ? 1 : -1;
         const firstDate = a.created;
         const secondDate = b.created;
         return isReversed * firstDate.localeCompare(secondDate);
@@ -103,62 +106,46 @@ function HomePage() {
     setDateSortType(e.target.value);
   };
 
+  const categoriesData = data.map((result, index) => {
+    return result.category;
+  });
+
+  const uniqueCategories = [...new Set([].concat(...categoriesData))];
+
+  const sortValues = ["Ascending", "Descending"];
+
   return (
     <>
       <div className="inputContainers">
-        <input
+        <InputSearch
           className="search"
           placeholder="Search Templates"
           type="text"
           value={search}
-          onChange={handleSearchChange}
+          handleChange={handleSearchChange}
         />
 
         <div className="filterInput">
           <div>Sort By:</div>
-          <div>
-            <select onChange={handleCategoryChange}>
-              <option value="">All</option>
-              <option value="Health">Health</option>
-              <option value="Education">Education</option>
-              <option value="E-Commerce">E-Commerce</option>
-              <option value="Government">Government</option>
-            </select>
-          </div>
-          <div>
-            <select onChange={handleSortChange}>
-              <option value="">Default</option>
-              <option value="asc">Ascending</option>
-              <option value="des">Descending</option>
-            </select>
-          </div>
-          <div>
-            <select onChange={handleDateSortChange}>
-              <option value="">Default</option>
-              <option value="asc">Ascending</option>
-              <option value="des">Descending</option>
-            </select>
-          </div>
+          <Sorting
+            handleChange={handleCategoryChange}
+            data={uniqueCategories}
+          />
+          <Sorting handleChange={handleSortChange} data={sortValues} />
+          <Sorting handleChange={handleDateSortChange} data={sortValues} />
         </div>
       </div>
+
       <p className="category">{categorySortType || "All"} Templates</p>
       <div className="container">{renderData(currentItems)}</div>
 
-      <div className="pageNumbers">
-        <button onClick={handlePrevbtn} disabled={currentPage === pages[0]}>
-          Previous
-        </button>
-        <div>
-          <span className="currentPage">{currentPage}</span> of{" "}
-          <span className="totalPage">{totalPage}</span>
-        </div>
-        <button
-          onClick={handleNextbtn}
-          disabled={currentPage === pages[pages.length - 1]}
-        >
-          Next
-        </button>
-      </div>
+      <Pagination
+        currentPage={currentPage}
+        handleNextbtn={handleNextbtn}
+        handlePrevbtn={handlePrevbtn}
+        pages={pages}
+        totalPage={totalPage}
+      />
     </>
   );
 }

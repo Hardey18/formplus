@@ -1,0 +1,22 @@
+.sortInput {
+    margin-left: 1rem;
+    border: 1px solid lightgray;
+    padding: .3rem .6rem;
+    border-radius: 3px;
+}
+
+select {
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+@media (max-width: 800px) {
+    select {
+      width: 100%;
+    }
+  
+    .sortInput {
+      margin: 1rem 0;
+    }
+  } 

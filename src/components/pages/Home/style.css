@@ -52,30 +52,6 @@ select {
   padding: 0.5rem 4rem;
 }
 
-.pageNumbers {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 4rem 10rem;
-}
-
-button {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-}
-
-.currentPage {
-  border: 1px solid black;
-  padding: 4px 10px;
-  border-radius: 4px;
-  margin-right: 1rem;
-}
-
-.totalPage {
-  margin-left: 1rem;
-}
-
 @media (max-width: 992px) {
   .container {  grid-template-columns: auto;}
 }   
@@ -110,9 +86,5 @@ button {
 
   .filterInput > div {
     margin: 1rem 0;
-  }
-
-  .pageNumbers {
-    padding: 1rem 2rem;
   }
 }   
