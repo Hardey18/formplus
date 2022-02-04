@@ -77,6 +77,11 @@ function HomePage() {
   const currentItems = filtered.slice(indexOfFirstItem, indexOfLastItem);
 
   const handleNextbtn = () => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
     setcurrentPage(currentPage + 1);
     if (currentPage + 1 > maxPageNumberLimit) {
       setmaxPageNumberLimit(maxPageNumberLimit + pageNumberLimit);
@@ -84,6 +89,11 @@ function HomePage() {
     }
   };
   const handlePrevbtn = () => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: "smooth",
+    });
     setcurrentPage(currentPage - 1);
     if ((currentPage - 1) % pageNumberLimit === 0) {
       setmaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
@@ -106,7 +116,7 @@ function HomePage() {
     setDateSortType(e.target.value);
   };
 
-  const categoriesData = data.map((result, index) => {
+  const categoriesData = data.map((result) => {
     return result.category;
   });
 
